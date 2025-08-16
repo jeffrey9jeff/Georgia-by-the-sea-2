@@ -18,7 +18,7 @@
   :root{
     --sand:#f6e8b1; --sea:#9fd3ff; --sky:#eaf6ff; --ui:#ffffffee; --ink:#1f2430;
     --accent:#ff7aa2; --towel:#ffd2e3;
-    --bottom-pad:110px; /* can be overridden in media queries */
+    --bottom-pad:110px;
   }
   *{box-sizing:border-box}
   html,body{height:100%;margin:0;background:linear-gradient(var(--sky),var(--sea) 40%,var(--sand) 40%);}
@@ -59,7 +59,7 @@
   .ghost{visibility:hidden}
 
   #modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;padding:16px}
-  .card{background:#fff;border-radius:16px;max-width:720px;padding:18px 16px;box-shadow:0 20px 40px #0004}
+  .card{background:#fff;border-radius:16px;max-width:780px;padding:18px 16px;box-shadow:0 20px 40px #0004}
   .card h2{margin:0 0 8px}
   .card p{margin:6px 0}
   .center{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
@@ -97,11 +97,11 @@
     <div class="card" style="background:#ffffffee;border-radius:14px;padding:10px;box-shadow:0 8px 24px #0001">
       <h2 style="margin:6px 0 8px;font-size:18px">How to play</h2>
       <ul style="margin:0 0 6px 18px;padding:0;line-height:1.5">
-        <li>Move: Arrow keys / WASD (mobile: on-screen arrows).</li>
-        <li>Nap: Hold Space (mobile: “Nap”) while on the pink towel to drop your <em>tie tie</em>.</li>
-        <li>Post: Press E (mobile: “Post”) when you’ve picked up a 📱 “TikTok idea”.</li>
-        <li>Collect: ☕️ (<em>cof cof</em>) wakes you up, 🍣 (<em>sush</em>), 🍧 (<em>Zoopy Doopy</em>), 🧀, 🍷 add Good-Times.</li>
-        <li>The day lasts 120s. Finish with max vibes, more followers, and minimum <em>tie tie</em>.</li>
+        <li><b>Move:</b> Arrow keys (or WASD). On mobile: on-screen arrows.</li>
+        <li><b>Nap:</b> Hold Space (mobile: “Nap”) while on the pink towel to drop your <em>Ty Ty</em>.</li>
+        <li><b>Post:</b> Press E (mobile: “Post”) when you’ve picked up a 📱 “TikTok idea”.</li>
+        <li><b>Collect:</b> ☕️ (<em>cof cof</em>), 🍣 (<em>sush</em>), 🍧 (<em>Zoopy Doopy</em>), 🧀, 🍷 add Good-Times.</li>
+        <li><b>Time:</b> The day lasts 120s. Max vibes, more followers, minimum <em>Ty Ty</em>.</li>
       </ul>
     </div>
 
@@ -111,7 +111,7 @@
         <div class="bar"><div class="fill" id="scoreFill"></div></div>
         <div class="label">Followers</div>
         <div class="bar"><div class="fill" id="folFill" style="background:linear-gradient(90deg,#7bdaff,#6bd66b)"></div></div>
-        <div class="label">Tie Tie (sleepiness)</div>
+        <div class="label">Ty Ty (sleepiness)</div>
         <div class="bar"><div class="fill" id="sleepFill" style="background:linear-gradient(90deg,#ffcf5b,#ff6b6b)"></div></div>
       </div>
       <div id="stats">
@@ -119,6 +119,7 @@
         <div class="pill">🎯 <span id="score">0</span></div>
         <div class="pill">👥 <span id="followers">0</span></div>
         <div class="pill">☕️ <span id="coffee">0</span></div>
+        <div class="pill">🏆 Master <span id="master">0</span></div>
         <button id="sound" class="pill" title="Sound on/off">🔊 Sound</button>
         <button id="install" class="pill" style="display:none">⬇️ Add to Home</button>
       </div>
@@ -132,11 +133,10 @@
     </div>
 
     <div id="legend">
-      <span>🧺 Nap towel (hold “Nap” to rest)</span>
-      <span>☕️ *cof cof* = wake up!</span>
-      <span>🥤 *coky coke* • 🍣 *sush* • 🧀 cheese • 🍷 wine • 🍧 Zoopy Doopy</span>
+      <span>🧺 Nap towel (center)</span>
+      <span>☕️ *cof cof* • 🍣 *sush* • 🧀 cheese • 🍷 wine • 🍧 Zoopy Doopy</span>
       <span>📱 Film TikTok → followers</span>
-      <span>⭐ Don’t get too *tie tie*!</span>
+      <span>⭐ Keep Ty Ty low!</span>
     </div>
   </div>
 
@@ -164,16 +164,34 @@
       <p>Good-Times: <b id="mScore">0</b></p>
       <p>Followers gained: <b id="mFol">0</b></p>
       <p>Coffees sipped (*cof cof*): <b id="mCof">0</b></p>
-      <p>Best Georgiaisms today: <span id="mQuips">“ushe”, “Zoopy Doopy”, “dunzo”</span></p>
-      <div class="center">
+      <p>Master score (all runs): <b id="mMaster">0</b></p>
+      <h3 style="margin-top:12px">Leaderboard</h3>
+      <div id="lb" style="font-size:14px;line-height:1.4;max-height:220px;overflow:auto;border:1px solid #0001;padding:8px;border-radius:10px;background:#fafafa"></div>
+      <div class="center" style="margin-top:10px">
+        <input id="name" placeholder="Your name" style="padding:8px 10px;border-radius:10px;border:1px solid #0002;outline:none"/>
+        <button class="btn big" id="submitScore">Submit</button>
+      </div>
+      <div class="center" style="margin-top:10px">
         <button class="btn big" id="again">Play again</button>
         <a class="btn big link" id="share" href="#">Share score</a>
       </div>
-      <p style="margin-top:10px;opacity:.8">Tip: Nap when *tie tie*, then hunt for treats and make a TikTok. thank *q*!</p>
+      <p style="margin-top:10px;opacity:.8">Tip: Nap on the towel to drop <em>Ty Ty</em> fast. thank <em>q</em>!</p>
     </div>
   </div>
 
 <script>
+/* ===== Leaderboard config (public optional) =====
+   Default: local-only. To enable public, create a Supabase project
+   and set a table "scores" with columns: id (uuid default), name text, score int, created_at timestamp default now().
+   Then fill in: SUPABASE_URL and SUPABASE_ANON.
+*/
+const LEADERBOARD = {
+  SUPABASE_URL: "", // e.g. "https://xxxx.supabase.co"
+  SUPABASE_ANON: "", // anon public key
+  TABLE: "scores",
+  ENABLED: false
+};
+
 /* ===== PWA boot ===== */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', ()=>navigator.serviceWorker.register('./sw.js'));
@@ -210,25 +228,9 @@ const FX = (()=> {
     const utter = new SpeechSynthesisUtterance('thank q');
     utter.rate = 1.1; utter.pitch = 1.1; speechSynthesis.speak(utter);
   }
-  function ocean(start=true){
-    if(!enabled) return;
-    if (start && !oceanNode){
-      // make pink-ish noise
-      const size=2**15, buf=ctx.createBuffer(1,size,ctx.sampleRate), data=buf.getChannelData(0);
-      let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
-      for(let i=0;i<size;i++){ const white=Math.random()*2-1;
-        b0=0.99886*b0+white*0.0555179; b1=0.99332*b1+white*0.0750759; b2=0.96900*b2+white*0.1538520;
-        b3=0.86650*b3+white*0.3104856; b4=0.55000*b4+white*0.5329522; b5=-0.7616*b5-white*0.0168980;
-        let out=b0+b1+b2+b3+b4+b5+b6+white*0.5362; out*=0.08; b6=white*0.115926; data[i]=out;
-      }
-      oceanNode=ctx.createBufferSource(); oceanNode.buffer=buf; oceanNode.loop=true;
-      oceanGain=ctx.createGain(); oceanGain.gain.value=0.18;
-      oceanNode.connect(oceanGain).connect(ctx.destination); oceanNode.start();
-    }
-  }
   async function toggle(on){
     enabled = on ?? !enabled;
-    if (enabled) { await ctx.resume(); ocean(true); }
+    if (enabled) { await ctx.resume(); }
     else { ctx.suspend(); }
     return enabled;
   }
@@ -243,30 +245,37 @@ document.getElementById('sound').addEventListener('click', async ()=>{
 (() => {
   const DAY_SECONDS = 120;
   const WORLD = { w: 960, h: 540 };
-  const PLAYER = { r: 16, speed: 2.4, x: WORLD.w*0.5, y: WORLD.h*0.7 };
-  const TOWEL = { x: WORLD.w*0.78, y: WORLD.h*0.72, w: 120, h: 70 };
+  const PLAYER = { r: 16, speed: 2.4, x: WORLD.w*0.5, y: WORLD.h*0.68 }; // start just above towel
+  // TOWEL CENTER
+  const TOWEL = { x: WORLD.w*0.5, y: WORLD.h*0.72, w: 140, h: 84 };
   const AREAS = { grass:{ y:WORLD.h*0.02, h:WORLD.h*0.18 }, water:{ y:WORLD.h*0.20, h:WORLD.h*0.22 }, sand:{ y:WORLD.h*0.42, h:WORLD.h*0.58 } };
   const LOOT_TYPES = [
-    { key:'coffee', emoji:'☕️', name:'cof cof', score:6, sleep:-35, followers:0, spawn:1.0, s:'sip' },
-    { key:'coke',   emoji:'🥤', name:'coky coke', score:5, sleep:-10, followers:0, spawn:0.9, s:'pop' },
-    { key:'sush',   emoji:'🍣', name:'sush', score:6, sleep:-5, followers:0, spawn:0.9, s:'pop' },
-    { key:'cheese', emoji:'🧀', name:'cheese', score:7, sleep:0, followers:0, spawn:0.75, s:'pop' },
-    { key:'wine',   emoji:'🍷', name:'wine', score:7, sleep:+6, followers:0, spawn:0.7, s:'pop' },
-    { key:'zoopy',  emoji:'🍧', name:'Zoopy Doopy', score:8, sleep:+2, followers:0, spawn:0.8, s:'pop' },
-    { key:'cam',    emoji:'📱', name:'TikTok idea', score:0, sleep:0, followers:+15, spawn:0.65, s:'pop' },
+    { key:'coffee', emoji:'☕️', name:'cof cof', score:6, spawn:1.0, s:'sip' },
+    { key:'coke',   emoji:'🥤', name:'coky coke', score:5, spawn:0.9, s:'pop' },
+    { key:'sush',   emoji:'🍣', name:'sush', score:6, spawn:0.9, s:'pop' },
+    { key:'cheese', emoji:'🧀', name:'cheese', score:7, spawn:0.75, s:'pop' },
+    { key:'wine',   emoji:'🍷', name:'wine', score:7, spawn:0.7, s:'pop' },
+    { key:'zoopy',  emoji:'🍧', name:'Zoopy Doopy', score:8, spawn:0.8, s:'pop' },
+    { key:'cam',    emoji:'📱', name:'TikTok idea', followers:+15, spawn:0.65, s:'pop' },
   ];
-  const MAX_SLEEP = 100, SLEEP_RATE=0.015, NAP_RATE=0.65;
+
+  // Ty Ty mechanics
+  const MAX_SLEEP = 100;                // 0 (fresh) -> 100 (very Ty Ty)
+  const TIRED_RATE = 2;                 // +2 per second passively
+  const NAP_CLEAR_RATE = 20;            // -20 per second => 100 -> 0 in 5s
+
   const MOBILE = /iPhone|Android|iPad|Mobile/i.test(navigator.userAgent);
 
   let c = document.getElementById('canvas'), ctx = c.getContext('2d');
   let keys={up:false,down:false,left:false,right:false,nap:false,post:false};
   let tStart=performance.now(), timeLeft=DAY_SECONDS, sleep=28, score=0, followers=0, coffees=0;
-  let loot=[], camIdeas=0, running=true, avatarImg=null;
+  let loot=[], camIdeas=0, running=true, avatarImg=null, master=loadMaster();
 
   function setFill(id,pct){ document.getElementById(id).style.width = Math.max(0,Math.min(100,pct)) + '%'; }
   const $score=v=>document.getElementById('score').textContent=v|0;
   const $followers=v=>document.getElementById('followers').textContent=v|0;
   const $coffee=v=>document.getElementById('coffee').textContent=v|0;
+  const $master=v=>document.getElementById('master').textContent=v|0;
 
   // load avatar for rendering inside player head
   (function(){
@@ -275,7 +284,7 @@ document.getElementById('sound').addEventListener('click', async ()=>{
     i.onload=()=>avatarImg=i; i.src=img.getAttribute('src');
   })();
 
-  // input
+  // input (ARROWS + WASD; arrows highlighted in help)
   addEventListener('keydown', e=>{
     const k=e.key.toLowerCase();
     if(['arrowup','w'].includes(e.key)) keys.up=true;
@@ -321,7 +330,7 @@ document.getElementById('sound').addEventListener('click', async ()=>{
     const dt=(now - tStart)/1000; tStart=now;
     timeLeft -= dt; if(timeLeft<=0) return endDay();
 
-    // Movement (sleepy = slower)
+    // Movement
     const slow = 1 - Math.min(0.55, sleep/MAX_SLEEP*0.45);
     const sp = PLAYER.speed * (MOBILE?1.05:1) * slow;
     let vx=(keys.right?-1:0)+(keys.left?1:0); vx*=-1;
@@ -330,60 +339,70 @@ document.getElementById('sound').addEventListener('click', async ()=>{
     PLAYER.x=clamp(PLAYER.x,20,WORLD.w-20);
     PLAYER.y=clamp(PLAYER.y,AREAS.water.y+AREAS.water.h+10,WORLD.h-20);
 
-    // Sleepiness
-    sleep = clamp(sleep + 100*0.015*dt, 0, MAX_SLEEP);
+    // Ty Ty: only decreases while napping on towel; otherwise rises
     const onTowel = (PLAYER.x>TOWEL.x-TOWEL.w/2 && PLAYER.x<TOWEL.x+TOWEL.w/2 && PLAYER.y>TOWEL.y-TOWEL.h/2 && PLAYER.y<TOWEL.y+TOWEL.h/2);
-    if(onTowel && keys.nap){ sleep = clamp(sleep - 100*0.65*dt, 0, MAX_SLEEP); score+=0.6; }
+    if(onTowel && keys.nap){
+      sleep = clamp(sleep - NAP_CLEAR_RATE*dt, 0, MAX_SLEEP); // 100 -> 0 in 5s
+      score += 0.5;
+    } else {
+      sleep = clamp(sleep + TIRED_RATE*dt, 0, MAX_SLEEP);      // grows over time
+    }
 
-    // Spawn & collect
+    // Spawn & collect (no Ty Ty effects from items now)
     spawnLoot();
     for(let i=loot.length-1;i>=0;i--){
       const it=loot[i];
       if(dist(PLAYER.x,PLAYER.y,it.x,it.y) <= (PLAYER.r+it.r)){
-        score+=it.t.score; sleep=clamp(sleep + it.t.sleep,0,MAX_SLEEP);
-        followers+=Math.max(0,it.t.followers);
-        if(it.t.key==='coffee'){coffees++; FX.sip();}
-        else FX.pop();
+        if (it.t.score) score+=it.t.score;
+        if (it.t.followers) followers+=it.t.followers;
+        if(it.t.key==='coffee'){coffees++; FX.sip();} else { FX.pop(); }
         if(it.t.key==='cam') camIdeas++;
         loot.splice(i,1);
       }
     }
+
+    // Post TikTok
     if(keys.post && camIdeas>0){
       const boost = 20 + Math.round(Math.random()*25);
       followers+=boost; score+=12; camIdeas--; keys.post=false;
-      if(Math.random()<0.34) FX.thankq(); // sometimes say "thank q"
+      if(Math.random()<0.34) FX.thankq();
     }
 
-    // UI
+    // UI fills
     document.getElementById('time').textContent=Math.ceil(timeLeft);
-    $score(score); $followers(followers); $coffee(coffees);
+    $score(score); $followers(followers); $coffee(coffees); $master(master);
     setFill('scoreFill', Math.min(100,(score/200)*100));
     setFill('folFill', Math.min(100,(followers/200)*100));
     setFill('sleepFill',(sleep/MAX_SLEEP)*100);
 
-    draw(onTowel);
+    // Render
+    draw(onTowel, sleep/MAX_SLEEP);
     requestAnimationFrame(step);
   }
 
-  function draw(onTowel){
+  function draw(onTowel, tiredPct){
     ctx.clearRect(0,0,WORLD.w,WORLD.h);
+
     // sea foam
     ctx.fillStyle='rgba(255,255,255,0.35)';
     for(let i=0;i<9;i++){
       const y=AREAS.water.y+AREAS.water.h-6 + Math.sin(performance.now()/900+i)*3;
       ctx.fillRect(i*120, y, 100, 3);
     }
-    // towel
+
+    // center towel
     ctx.save(); ctx.translate(TOWEL.x,TOWEL.y);
     roundedRect(-TOWEL.w/2,-TOWEL.h/2,TOWEL.w,TOWEL.h,12,'#ffffffcc');
     ctx.strokeStyle='#ff6ba9'; ctx.lineWidth=3; ctx.strokeRect(-TOWEL.w/2+6,-TOWEL.h/2+6,TOWEL.w-12,TOWEL.h-12);
     ctx.restore();
+
     // loot
     loot.forEach(it=>{
       it.pulse+=0.06; ctx.font='26px system-ui, Apple Color Emoji'; ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.globalAlpha=0.85 + Math.sin(it.pulse)*0.1; ctx.fillText(it.t.emoji,it.x,it.y); ctx.globalAlpha=1;
     });
-    // player head (with avatar in a circle)
+
+    // player head (avatar circle)
     const r=PLAYER.r;
     if(avatarImg){
       ctx.save();
@@ -395,10 +414,29 @@ document.getElementById('sound').addEventListener('click', async ()=>{
       ctx.font='22px system-ui, Apple Color Emoji'; ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.fillText('😊', PLAYER.x, PLAYER.y);
     }
+
     // hint
-    ctx.font='14px system-ui, -apple-system'; ctx.fillStyle='#00000088'; ctx.textAlign='center';
-    if(onTowel) ctx.fillText('💤 Hold Nap to power-rest (the ushe)', PLAYER.x, PLAYER.y - 26);
+    if(onTowel){
+      ctx.font='14px system-ui, -apple-system'; ctx.fillStyle='#00000088'; ctx.textAlign='center';
+      ctx.fillText('💤 Hold Nap to power-rest (the ushe)', PLAYER.x, PLAYER.y - 26);
+    }
+
+    // Closing borders effect (central circular window)
+    // r_max = half-diagonal (covers whole canvas), r_min ≈ 50% of r_max → ~25% visible area
+    const rMax = Math.hypot(WORLD.w, WORLD.h) * 0.5;
+    const rMin = rMax * 0.5;
+    const holeR = rMax - (rMax - rMin)*tiredPct; // shrinks with Ty Ty
+    const cx = WORLD.w*0.5, cy = WORLD.h*0.5;
+
+    ctx.save();
+    ctx.fillStyle='rgba(0,0,0,0.45)';
+    ctx.beginPath();
+    ctx.rect(0,0,WORLD.w,WORLD.h);
+    ctx.arc(cx,cy,holeR,0,Math.PI*2,true);
+    ctx.fill('evenodd');
+    ctx.restore();
   }
+
   function roundedRect(x,y,w,h,r,color){
     ctx.fillStyle=color; ctx.beginPath();
     ctx.moveTo(x+r,y);
@@ -411,34 +449,128 @@ document.getElementById('sound').addEventListener('click', async ()=>{
 
   function endDay(){
     running=false;
-    try{ const best=+localStorage.getItem('g_sea_best')||0; if(score>best) localStorage.setItem('g_sea_best', String(score|0)); }catch{}
+    try{
+      const best=+localStorage.getItem('g_sea_best')||0;
+      if(score>best) localStorage.setItem('g_sea_best', String(score|0));
+      master = (+localStorage.getItem('g_sea_master')||0) + (score|0);
+      localStorage.setItem('g_sea_master', String(master));
+    }catch{}
     document.getElementById('mScore').textContent=score|0;
     document.getElementById('mFol').textContent=followers|0;
     document.getElementById('mCof').textContent=coffees|0;
+    document.getElementById('mMaster').textContent=master|0;
+
     const quips=['ushe','Zoopy Doopy','dunzo','cof cof','malk','tootsies','stompers','thank q','Sush','wuv'];
-    document.getElementById('mQuips').textContent = pick3(quips).map(q=>`“${q}”`).join(', ');
-    document.getElementById('modal').style.display='flex';
-    const msg=`Georgia's day in Coogee: ${score|0} Good-Times and ${followers|0} followers! #Georgiaisms`;
+    document.getElementById('mQuips')?.remove?.(); // old id may not exist now
+
+    // Leaderboard
+    renderLeaderboard([]);
+    if (LEADERBOARD.ENABLED && LEADERBOARD.SUPABASE_URL && LEADERBOARD.SUPABASE_ANON) {
+      fetchTop().then(rows=>renderLeaderboard(rows)).catch(()=>{});
+    } else {
+      // local-only fallback (store top 10 by name in localStorage)
+      const name = localStorage.getItem('g_sea_name') || 'Georgia Fan';
+      const lb = JSON.parse(localStorage.getItem('g_sea_lb')||'[]');
+      lb.push({name, score: score|0, at: Date.now()});
+      lb.sort((a,b)=>b.score-a.score); if(lb.length>20) lb.length=20;
+      localStorage.setItem('g_sea_lb', JSON.stringify(lb));
+      renderLeaderboard(lb);
+    }
+
+    // Share
+    const msg=`Georgia's day in Coogee: ${score|0} Good-Times (+ master ${master|0})! #Georgiaisms`;
     document.getElementById('share').href=`https://twitter.com/intent/tweet?text=${encodeURIComponent(msg)}`;
+
+    document.getElementById('modal').style.display='flex';
   }
-  function pick3(list){const s=new Set(); while(s.size<3) s.add(list[Math.floor(Math.random()*list.length)]); return [...s];}
+
   document.getElementById('again').addEventListener('click', ()=>{
     loot.length=0; score=0; followers=0; coffees=0; camIdeas=0; sleep=28; timeLeft=DAY_SECONDS;
-    PLAYER.x=WORLD.w*0.5; PLAYER.y=WORLD.h*0.7;
+    PLAYER.x=WORLD.w*0.5; PLAYER.y=WORLD.h*0.68;
     document.getElementById('modal').style.display='none';
-    running=true; tStart=performance.now(); requestAnimationFrame(step);
+    tStart=performance.now(); running=true; requestAnimationFrame(step);
+  });
+
+  // Submit score
+  document.getElementById('submitScore').addEventListener('click', async ()=>{
+    const name = (document.getElementById('name').value || '').trim() || 'Georgia Fan';
+    localStorage.setItem('g_sea_name', name);
+    if (LEADERBOARD.ENABLED && LEADERBOARD.SUPABASE_URL && LEADERBOARD.SUPABASE_ANON) {
+      try{
+        await submitScore(name, score|0);
+        const rows = await fetchTop();
+        renderLeaderboard(rows);
+      }catch(e){}
+    } else {
+      // local fallback
+      const lb = JSON.parse(localStorage.getItem('g_sea_lb')||'[]');
+      lb.push({name, score: score|0, at: Date.now()});
+      lb.sort((a,b)=>b.score-a.score); if(lb.length>20) lb.length=20;
+      localStorage.setItem('g_sea_lb', JSON.stringify(lb));
+      renderLeaderboard(lb);
+    }
   });
 
   // start loop
   requestAnimationFrame(step);
 
-  // desktop tip
+  // desktop tip (arrow keys highlighted)
   if (!MOBILE) {
     const tip=document.createElement('div');
-    tip.textContent='Controls: WASD/Arrow keys to move • Space = Nap • E = Post TikTok';
+    tip.textContent='Controls: Arrow keys to move • Space = Nap • E = Post TikTok';
     tip.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:92px;background:#000a;color:#fff;padding:8px 12px;border-radius:10px;font-size:12px;box-shadow:0 6px 16px #0005';
     document.body.appendChild(tip); setTimeout(()=>tip.remove(), 3800);
   }
+
+  // ===== Leaderboard helpers =====
+  function renderLeaderboard(rows){
+    const el=document.getElementById('lb');
+    if (!rows || !rows.length){
+      el.innerHTML = '<em>No scores yet — be the first!</em>';
+      return;
+    }
+    // If using Supabase rows, sum by name into a master score:
+    const map=new Map();
+    for (const r of rows){
+      const n=(r.name||'Georgia Fan').slice(0,40);
+      map.set(n, (map.get(n)||0) + (+r.score||0));
+    }
+    const agg=[...map.entries()].map(([name,total])=>({name,total}));
+    agg.sort((a,b)=>b.total-a.total);
+    el.innerHTML = agg.slice(0,20).map((r,i)=>`${i+1}. <b>${escapeHtml(r.name)}</b> — ${r.total}`).join('<br>');
+  }
+
+  function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));}
+
+  async function submitScore(name, score){
+    const url = `${LEADERBOARD.SUPABASE_URL}/rest/v1/${LEADERBOARD.TABLE}`;
+    const res = await fetch(url, {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'apikey': LEADERBOARD.SUPABASE_ANON,
+        'Authorization': `Bearer ${LEADERBOARD.SUPABASE_ANON}`,
+        'Prefer':'return=minimal'
+      },
+      body: JSON.stringify({name, score})
+    });
+    if (!res.ok) throw new Error('submit failed');
+  }
+
+  async function fetchTop(){
+    const url = `${LEADERBOARD.SUPABASE_URL}/rest/v1/${LEADERBOARD.TABLE}?select=name,score,created_at&order=created_at.desc&limit=2000`;
+    const res = await fetch(url, {
+      headers:{
+        'apikey': LEADERBOARD.SUPABASE_ANON,
+        'Authorization': `Bearer ${LEADERBOARD.SUPABASE_ANON}`
+      }
+    });
+    if (!res.ok) throw new Error('fetch failed');
+    return await res.json();
+  }
+
+  function loadMaster(){ return +localStorage.getItem('g_sea_master')||0; }
+
 })();
 </script>
 </body>
